@@ -1,0 +1,167 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+     <style>
+span.underline {
+    font-weight: bold;
+    text-decoration: underline;
+}
+td.question{
+	width:500px;
+	
+}
+td.choice {
+	width:500px;
+}
+div.option{
+	width:500px;
+}
+#divCounter.#dicCountersub{
+	font-family: "Bank Gothic", "Futura", "Arial";
+	
+}
+td.prefgreen {
+    border: none;
+	color:white;
+	border-radius:4px;
+        width: 60px;
+        text-align: center;
+        background-color: #45a049;
+}
+input[type=submit] {
+    width: 100px;
+    background-color: #4CAF50;
+	heighnt:25px;
+    color: white;
+    padding: 2px 15px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+button {
+    width: 100px;
+    background-color: #4CAF50;
+        heighnt:25px;
+    color: white;
+    padding: 2px 15px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #45a049;
+
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+var pauseStart=0;
+//var deltaT=0;
+		console.log("Doc ready");
+		$("#pause").click(function(){
+			console.log("In :"+this.id);
+			//$.ajax();
+			pauseStart=Date.now();
+		});
+		console.log("After Pause Click");
+		$("#resume").click(function(){
+			console.log("In :"+this.id);
+			//$.ajax();
+			var deltaT=Date.now()-pauseStart;
+			document.getElementById("deltaPause").value =deltaT //("#deltaPause").val(deltaT);
+			console.log("deltaT :"+deltaT);
+			pauseStart=0;
+
+		});
+
+
+    if(localStorage.getItem("counter")){
+	var value = localStorage.getItem("counter");
+	if((value-Date.now())<=14*60*1000 || (value-Date.now())>=-3*60*1000){
+
+}
+	else{
+	value=Date.now()+14*60*1000;
+	localStorage.setItem("counter", value);
+	console.log("NewSet: "+value);
+}
+	console.log("Counter: "+value);
+      }
+    else{
+
+	var value=Date.now()+14*60*1000;
+	localStorage.setItem("counter", value);
+	console.log("NewSet: "+value);
+    }
+
+	var toTimer=function(milliSeconds){
+		var minutes=Math.floor(milliSeconds/(1000*60));
+		var seconds=Math.floor((milliSeconds-minutes*1000*60)/1000);
+		return minutes+":"+seconds;
+	};
+	var qStartedAt=Date.now()
+    var counter_total = function (){
+				//console.log("Pause Start in Count Block: "+pauseStart);
+      document.getElementById('divCounter').innerHTML = toTimer(value-Date.now());
+    };
+
+	var counter_sub = function (){
+	//console.log("deltaT inside subTimer"+deltaT);
+	var remainSeconds=Date.now()-qStartedAt;
+      document.getElementById('divCounterSub').innerHTML = toTimer(remainSeconds);
+    };
+    var interval = setInterval(function (){
+		counter_total();
+		counter_sub()
+
+		}, 1000);
+
+		});
+</script>
+ <script type="text/javascript">
+
+
+
+  </script>
+ </head>
+ <body>
+ <p></p><h3>Set </h3>
+<table>
+<tr>
+<td class="prefgreen">Total</td><td class="prefgreen"><div id="divCounter"></div>  </td>
+<td class="prefgreen">Sub</td><td class="prefgreen"><div id="divCounterSub"></div></td>
+</tr>
+</table>
+
+ <table>
+<tbody><tr><td class="question"> <p>{{question.q_text|safe}} </p></td>
+
+
+
+
+
+ <td class="choice"><p></p><h3> Q {{question.q_no}}</h3>
+ <form action="{{next_question}}" method="post">
+ <input name="prev_question" value="{{question.q_no}}" type="hidden">
+ <input name="deltaPause" value="0" id="deltaPause" type="hidden">
+  <div class="option"><input name="Choice" value="A" type="radio"> A {{question.A|safe}}</div>
+  <div class="option"><input name="Choice" value="B" type="radio"> B {{question.B|safe}}</div>
+ <div class="option"> <input name="Choice" value="C" type="radio"> C {{question.C|safe}}</div>
+ <div class="option"> <input name="Choice" value="D" type="radio"> D {{question.D|safe}}</div>
+ <div class="option"> <input name="Choice" value="E" type="radio"> E {{question.E|safe}}</div>
+  <input name="Submit" value="Next" type="submit">
+</form>
+</td>
+</tr>
+</tbody></table>
+  <button id="pause">Pause </button>
+    <button id="resume">Resume </button>
+<p> Q  | <a href="{{url_for('index')}}">Reset</a>
+
+</p></body></html>
